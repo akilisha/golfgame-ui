@@ -25,7 +25,6 @@ export default function Login() {
             flexDirection: 'column',
             marginTop: '30px'
         }}>
-            <button style={{ display: 'block' }} onClick={() => supabase.auth.signOut()}>Sign out</button>
             <ScanQRCode text={baseUrl} />;
         </div>
         }</div>

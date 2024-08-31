@@ -1,3 +1,7 @@
+Start app
+
+DEBUG=vite:* npm run dev
+
 Automate profile creation upon sign up
 
 
@@ -60,6 +64,41 @@ AFTER
   ) EXECUTE FUNCTION public.create_profile();
 
 
+-- SELECT gen_random_uuid();
+
+create table if not exists public.mg_location(
+  id uuid not null default gen_random_uuid(),
+  name text not null,
+  street text not null,
+  city text not null,
+  state_zip text not null,
+  country text not null,
+  latitude float not null,
+  longitude float not null,
+  date_created timestamp with time zone default timezone('utc'::text, now()) not null,
+  constraint uniq_place unique(name, city, state_zip),
+  constraint location_pk primary key(id)
+);
+
+
+ALTER TABLE public.mg_location ENABLE ROW LEVEL SECURITY;
+
+
+-- Create Policy around mg_location
+create policy "Anyone can view entries in mg_location table."
+on mg_location for select
+to anon;
+
+
+create policy "Anyone can insert records in mg_location table."
+on mg_location for insert
+to anon;
+
+
+create policy "Anyone can update records in mg_location table."
+on mg_location for update
+to anon;
+
 
 create table if not exists public.mg_player (
   organizer uuid references auth.users (id) not null,
@@ -78,16 +117,16 @@ ALTER TABLE public.mg_player ENABLE ROW LEVEL SECURITY;
 
 
 -- Create Policy around mp_players
-create policy "Organizer can insert records in mg_player table."
-on mg_player for insert
-to authenticated
-with check ( auth.uid() = organizer );
-
-
 create policy "Organizer can view their own entries in mg_player table."
 on mg_player for select
 to authenticated
 using ( (select auth.uid()) = organizer );
+
+
+create policy "Organizer can insert records in mg_player table."
+on mg_player for insert
+to authenticated
+with check ( auth.uid() = organizer );
 
 
 create policy "Organizer can update records in mg_player table."
@@ -105,3 +144,34 @@ using ( auth.uid() = organizer );       -- checks if the existing row complies w
 -- insert into mg_player (organizer, player, hole, score) 
 -- values (?, ?, ?, ?)
 -- on conflict (organizer, player, hole) do update set score = EXCLUDED.score;
+
+
+-- select users from auth table
+
+CREATE or replace function select_account(organizer text) returns setof auth.users AS $$
+begin
+  return query select * from auth.users where id = organizer::uuid;
+end;
+$$ language plpgsql; 
+
+select * from select_account('some_valid_user_id') limit 1;
+
+
+-- delete a user from auth table
+
+DROP FUNCTION delete_account(text);
+
+CREATE or replace function delete_account(organizer_input text) returns void AS $$
+begin
+delete from mg_player where organizer = organizer_input::uuid;
+delete from auth.users where id = organizer_input::uuid;
+end;
+$$ language plpgsql SECURITY DEFINER; 
+
+CREATE POLICY "Only authenticated account owner can delete their account."
+  ON auth.users
+  FOR DELETE
+  TO authenticated
+  USING ( auth.uid() = id );
+
+select delete_account('some_valid_user_id');

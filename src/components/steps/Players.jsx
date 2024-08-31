@@ -15,7 +15,7 @@ import { AppContext } from '../../state/AppContext';
 
 export default function Players() {
 
-  const { players, addPlayer, dropPlayer } = React.useContext(AppContext)
+  const { session, players, addPlayer, dropPlayer, fetchPlayers } = React.useContext(AppContext)
   const [error, setError] = React.useState('')
 
   const handleSubmit = (event) => {
@@ -30,11 +30,22 @@ export default function Players() {
       setError(`player '${name}' already exists`)
     }
     else {
-      addPlayer(name);
+      addPlayer({player: name});
       setError('')
     }
     event.currentTarget.reset();
   };
+
+  React.useEffect(() => {
+    if(session){
+      (async function(){
+        const players = await fetchPlayers();
+        for(let row of players){
+          addPlayer(row)
+        }
+      })();
+    }
+  }, [session]);
 
   return (
     <div style={{

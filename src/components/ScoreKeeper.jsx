@@ -11,11 +11,12 @@ import Login from './steps/Login';
 import Players from './steps/Players';
 import Scores from './steps/Scores';
 import Tally from './steps/Tally';
-import Location from './steps/Location';
+// import Minigolf from './steps/Minigolf';
 
-const steps = ['Location', 'Login', 'Players', 'Scores'];
+// const steps = ['Login', 'Minigolf', 'Players', 'Scores'];
+const steps = ['Login', 'Players', 'Scores'];
 
-export default function InvitationCode() {
+export default function ScoreKeeper() {
 
     const [activeStep, setActiveStep] = React.useState(0);
     const [skipped, setSkipped] = React.useState(new Set());
@@ -65,13 +66,15 @@ export default function InvitationCode() {
     function getStepContent(step) {
         switch (step) {
             case 0:
-                return <Location />
-            case 1:
                 return <Login />;
-            case 2:
+            case 1:
+                // return <Minigolf />
                 return <Players />;
-            case 3:
+            case 2:
+                // return <Players />;
                 return <Scores />
+            case 3:
+                // return <Scores />
             default:
                 throw new Error('Unknown step');
         }

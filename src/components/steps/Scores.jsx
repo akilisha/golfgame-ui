@@ -10,11 +10,19 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import { AppContext } from '../../state/AppContext';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
+import IconButton from '@mui/material/IconButton';
 
 export default function Scores() {
 
-  const { players, hole, updateScores } = React.useContext(AppContext);
-  const [valid, setValid] = React.useState({})
+  const { players, maxHoles, hole, setHole, updateScores } = React.useContext(AppContext);
+  const [valid, setValid] = React.useState({});
+  //create refs for text inputs to update scores/hole 
+  const refs = players.reduce((prev, curr) => {
+    prev[curr.name] = React.useRef(null)
+    return prev;
+  }, {})
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -41,6 +49,14 @@ export default function Scores() {
     event.currentTarget.reset();
   };
 
+  React.useEffect(() => {
+    players.forEach(player => {
+      if (refs[player.name].current) {
+        refs[player.name].current.value = player.scores[hole]
+      }
+    })
+  }, [hole])
+
   return (
     <div style={{
       width: "400px",
@@ -52,7 +68,11 @@ export default function Scores() {
             <TableHead>
               <TableRow>
                 <TableCell>Player</TableCell>
-                <TableCell align="right">Hole {hole + 1}</TableCell>
+                <TableCell align="right">
+                  {hole > 0 && <IconButton aria-label="previous" size="small" color="secondary" sx={{ mr: 1 }} onClick={() => setHole(hole - 1)}><RemoveIcon /></IconButton>}
+                  Hole {hole + 1}
+                  {hole < maxHoles && <IconButton aria-label="next" size="small" color="primary" sx={{ ml: 1 }} onClick={() => setHole(hole + 1)}><AddIcon /></IconButton>}
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -65,7 +85,15 @@ export default function Scores() {
                     {row.name}
                   </TableCell>
                   <TableCell align="right">
-                    <TextField label="Strokes" variant="outlined" name={row.name} autoComplete={'off'} type='number' error={valid[row.name] != undefined && valid[row.name] !== ''} helperText={valid[row.name]} />
+                    <TextField
+                      inputRef={refs[row.name]}
+                      label="Strokes"
+                      variant="outlined"
+                      name={row.name}
+                      autoComplete={'off'}
+                      type='number'
+                      error={valid[row.name] != undefined && valid[row.name] !== ''}
+                      helperText={valid[row.name]} />
                   </TableCell>
                 </TableRow>
               ))}
