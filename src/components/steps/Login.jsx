@@ -6,7 +6,7 @@ import ScanQRCode from '../ScanQRCode';
 
 export default function Login() {
 
-    const baseUrl = import.meta.env.BASE_URL;
+    const loc = window.location;
     const { supabase, session } = React.useContext(AppContext);
 
     return (<div style={{
@@ -18,6 +18,7 @@ export default function Login() {
             supabaseClient={supabase}
             appearance={{ theme: ThemeSupa }}
             providers={["google"]}
+            redirectTo={loc.origin}
         />
         :
         <div style={{
@@ -25,7 +26,7 @@ export default function Login() {
             flexDirection: 'column',
             marginTop: '30px'
         }}>
-            <ScanQRCode text={baseUrl} />;
+            <ScanQRCode text={loc.origin} />;
         </div>
         }</div>
     )
