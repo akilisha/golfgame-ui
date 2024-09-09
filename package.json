@@ -16,10 +16,15 @@
     "@googlemaps/places": "^1.6.0",
     "@mui/icons-material": "^5.16.7",
     "@mui/material": "^5.16.7",
+    "@stripe/react-stripe-js": "^2.8.0",
+    "@stripe/stripe-js": "^4.4.0",
     "@supabase/auth-ui-react": "^0.4.7",
+    "@supabase/supabase-js": "^2.45.2",
+    "@vis.gl/react-google-maps": "^1.1.0",
     "qrcode": "^1.5.4",
     "react": "^17.0.0 || ^18.0.0",
-    "react-dom": "^17.0.0 || ^18.0.0"
+    "react-dom": "^17.0.0 || ^18.0.0",
+    "stripe": "^16.9.0"
   },
   "peerDependencies": {
     "react": "^17.0.0 || ^18.0.0",
@@ -27,7 +32,6 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.8.0",
-    "@supabase/supabase-js": "^2.45.2",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",

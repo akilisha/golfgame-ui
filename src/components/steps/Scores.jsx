@@ -86,6 +86,7 @@ export default function Scores() {
                   </TableCell>
                   <TableCell align="right">
                     <TextField
+                      onFocus={() => refs[row.name].current.select()}
                       inputRef={refs[row.name]}
                       label="Strokes"
                       variant="outlined"

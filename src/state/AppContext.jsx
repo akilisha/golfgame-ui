@@ -1,8 +1,10 @@
 import { createContext, useState, useEffect } from 'react';
+import { loadStripe } from '@stripe/stripe-js';
 import { supabase, upsertPlayer, deletePlayer, selectPlayers, upsertScores, tallyScores, clearScores, selectAccount, updateAccount, deleteAccount } from '../service/suparepo';
 
 export const AppContext = createContext(null);
 
+export const QR_CODE_MODE = 'qr_code';
 export const GOLFING_MODE = 'golfing';
 export const PROFILE_MODE = 'profile';
 export const DELETED_MODE = 'deleted';
@@ -162,8 +164,42 @@ export function AppProvider({ children }) {
         }
     }
 
+    async function createPaymentIntent({ amount }) {
+
+        return await fetch(`${import.meta.env.VITE_SUPABASE_URL}/${import.meta.env.VITE_FETCH_PAYMENT_INTENT}`, {
+            method: 'POST',
+            headers: {
+                "Authorization": `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ amount })
+        })
+            .then(res => res.json());
+    }
+
+    async function createSetupIntent({ customerId }) {
+
+        return await fetch(`${import.meta.env.VITE_SUPABASE_URL}/${import.meta.env.VITE_FETCH_SETUP_INTENT}`, {
+            method: 'POST',
+            headers: {
+                "Authorization": `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ customerId })
+        })
+            .then(res => res.json());
+    }
+
+    // Make sure to call `loadStripe` outside of a component’s render to avoid
+    // recreating the `Stripe` object on every render.
+    const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUB_KEY);
+
     return (
-        <AppContext.Provider value={{ ...state, supabase, session, fetchProfile, updateProfile, closeAccount, fetchPlayers, addPlayer, dropPlayer, updateScores, playerTally, sessionTally, resetScores, setMode, setHole, setLocation }}>
+        <AppContext.Provider value={{
+            ...state, supabase, session, fetchProfile, updateProfile, closeAccount, fetchPlayers, addPlayer, dropPlayer,
+            updateScores, playerTally, sessionTally, resetScores, setMode, setHole, setLocation, stripePromise, createPaymentIntent,
+            createSetupIntent
+        }}>
             {children}
         </AppContext.Provider>
     )

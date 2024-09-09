@@ -171,3 +171,63 @@ CREATE POLICY "Only authenticated account owner can delete their account."
 
 select delete_account('some_valid_user_id');
 ```
+
+## Create supabase function
+
+```bash
+npx supabase functions new fetch-stripe-payment-intent
+
+npx supabase functions new fetch-stripe-setup-intent
+
+npx supabase functions new create-stripe-new-customer
+
+npx supabase functions new fetch-stripe-payment-method
+
+npx supabase functions new fetch-stripe-payment-offline
+```
+
+## Deploy supabase function
+
+```bash
+npx supabase functions deploy fetch-stripe-payment-intent --project-ref kyjzzmdnpfvxgjfogfqu
+
+npx supabase functions deploy fetch-stripe-setup-intent --project-ref kyjzzmdnpfvxgjfogfqu
+
+npx supabase functions deploy create-stripe-new-customer --project-ref kyjzzmdnpfvxgjfogfqu
+
+npx supabase functions deploy fetch-stripe-payment-method --project-ref kyjzzmdnpfvxgjfogfqu
+
+npx supabase functions deploy fetch-stripe-payment-offline --project-ref kyjzzmdnpfvxgjfogfqu
+```
+
+## Execute Stripe function in supabase
+
+```bash
+curl -L -X POST "https://kyjzzmdnpfvxgjfogfqu.supabase.co/functions/v1/fetch-stripe-payment-intent" \
+-H "Authorization: Bearer ANON_KEY" \
+-H "Content-Type: application/json" \
+--data '{"amount": 500}'
+
+curl -L -X POST 'https://kyjzzmdnpfvxgjfogfqu.supabase.co/functions/v1/fetch-stripe-setup-intent' \
+-H 'Authorization: Bearer ANON_KEY' \
+-H "Content-Type: application/json" \
+--data '{"customerId": "<id>"}'
+
+curl -L -X POST 'https://kyjzzmdnpfvxgjfogfqu.supabase.co/functions/v1/create-stripe-new-customer' \
+-H 'Authorization: Bearer ANON_KEY' \
+-H "Content-Type: application/json" \
+--data '{"name": "<name>", "email": "<email>"}'
+```
+
+## Handling secrets
+
+```bash
+# load secrets
+
+npx supabase secrets set --env-file ./supabase/functions/.env
+
+# view secrets
+
+npx supabase secrets list
+```
+
