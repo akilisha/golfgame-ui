@@ -13,6 +13,7 @@ import { AppContext } from '../../state/AppContext';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import IconButton from '@mui/material/IconButton';
+import Alert from '@mui/material/Alert';
 
 export default function Scores() {
 
@@ -93,7 +94,9 @@ export default function Scores() {
                       autoComplete={'off'}
                       type='number'
                       error={valid[row.name] != undefined && valid[row.name] !== ''}
-                      helperText={valid[row.name]} />
+                      helperText={valid[row.name]}
+                      onFocus={event => event.target.select()}
+                      disabled={hole === maxHoles} />
                   </TableCell>
                 </TableRow>
               ))}
@@ -101,14 +104,21 @@ export default function Scores() {
           </Table>
         </TableContainer>
 
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          sx={{ mt: 3, mb: 2 }}
-        >
-          Submit
-        </Button>
+        {players?.length === 0? 
+        <Alert severity="error" sx={{ mt: 2 }}>The game has no players yet</Alert>
+        : 
+        hole < maxHoles ?
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+          >
+            Submit
+          </Button>
+          :
+          <Alert severity="success" sx={{ mt: 2 }}>End of game reached</Alert>
+        }
       </Box>
     </div>
 
