@@ -57,7 +57,7 @@ export default function Players() {
           <TableHead>
             <TableRow>
               <TableCell>Player</TableCell>
-              <TableCell align="right">Score</TableCell>
+              <TableCell align="right"></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -67,12 +67,13 @@ export default function Players() {
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
               >
                 <TableCell component="th" scope="row">
-                  <IconButton color="secondary" aria-label="drop player" size='small' onClick={() => dropPlayer(row.name)}>
-                    <HighlightOffIcon />
-                  </IconButton>
                   {row.name}
                 </TableCell>
-                <TableCell align="right">{0}</TableCell>
+                <TableCell align="right">
+                <IconButton color="secondary" aria-label="drop player" size='small' onClick={() => dropPlayer(row.name)}>
+                    <HighlightOffIcon />
+                  </IconButton>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

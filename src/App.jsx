@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react'
 import Layout from './components/Layout';
 import UserDeleted from './components/UserDeleted';
-import ScoreKeeper from './components/ScoreKeeper';
+import GolfGame from './components/GolfGame';
 import { AppContext, GOLFING_MODE, DELETED_MODE, PROFILE_MODE } from './state/AppContext';
 import UserProfile from './components/UserProfile';
 
@@ -11,7 +11,7 @@ export default function App() {
   const [current, setCurrent] = useState(null);
   const views = {
     DELETED_MODE: <UserDeleted />,
-    GOLFING_MODE: <ScoreKeeper />,
+    GOLFING_MODE: <GolfGame />,
     PROFILE_MODE: <UserProfile />
   }
 

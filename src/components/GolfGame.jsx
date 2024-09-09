@@ -11,18 +11,20 @@ import Login from './steps/Login';
 import Players from './steps/Players';
 import Scores from './steps/Scores';
 import Tally from './steps/Tally';
+import Launcher from './steps/Launcher';
 // import Minigolf from './steps/Minigolf';
 
 // const steps = ['Login', 'Minigolf', 'Players', 'Scores'];
-const steps = ['Login', 'Players', 'Scores'];
+const steps = ['Launcher', 'Login', 'Players', 'Scores'];
 
-export default function ScoreKeeper() {
+export default function GolfGame() {
 
-    const [activeStep, setActiveStep] = React.useState(0);
+    const loc = window.location;
+    const [activeStep, setActiveStep] = React.useState(1);
     const [skipped, setSkipped] = React.useState(new Set());
 
     const isStepOptional = (step) => {
-        return step === 0;
+        return step === 1;
     };
 
     const isStepSkipped = (step) => {
@@ -66,15 +68,17 @@ export default function ScoreKeeper() {
     function getStepContent(step) {
         switch (step) {
             case 0:
-                return <Login />;
+                return <Launcher text={loc.origin} />;
             case 1:
+                return <Login />;
+            case 2:
                 // return <Minigolf />
                 return <Players />;
-            case 2:
+            case 3:
                 // return <Players />;
                 return <Scores />
-            case 3:
-                // return <Scores />
+            case 4:
+            // return <Scores />
             default:
                 throw new Error('Unknown step');
         }

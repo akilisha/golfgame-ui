@@ -2,7 +2,7 @@ import * as React from 'react';
 import { AppContext } from '../../state/AppContext';
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
-import ScanQRCode from '../ScanQRCode';
+import ScoreHistory from '../ScoreHistory';
 
 export default function Login() {
 
@@ -26,7 +26,7 @@ export default function Login() {
             flexDirection: 'column',
             marginTop: '30px'
         }}>
-            <ScanQRCode text={loc.origin} />;
+            <ScoreHistory />;
         </div>
         }</div>
     )
