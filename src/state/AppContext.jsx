@@ -14,7 +14,7 @@ const initialState = {
     players: [],
     hole: 0,
     location: null,
-    maxHoles: import.meta.env.VITE_MAX_GAME_HOLES
+    maxHoles: Number(import.meta.env.VITE_MAX_GAME_HOLES || 18)
 }
 
 export function AppProvider({ children }) {
@@ -84,7 +84,7 @@ export function AppProvider({ children }) {
         }
     }
 
-    function addPlayer({ player, hole, score }, holes = 18) {
+    function addPlayer({ player, hole, score }) {
         setState(curr => {
             if (curr.players.some(pl => pl.name === player)) {
                 const updatedPlayers = curr.players.map(pl => {
@@ -96,7 +96,7 @@ export function AppProvider({ children }) {
                 return ({ ...curr, players: updatedPlayers });
             }
             else {
-                const scores = new Array(holes);
+                const scores = new Array(initialState.maxHoles);
                 scores.fill(0);
                 return ({ ...curr, players: [...curr.players, { name: player, scores }] })
             }

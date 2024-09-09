@@ -56,7 +56,7 @@ export default function Players() {
         <Table sx={{}} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell colSpan={2}>Player</TableCell>
+              <TableCell align="right" colSpan={2}>Player</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

@@ -7,6 +7,7 @@ import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Button from '@mui/material/Button';
+import Launch from './steps/Launch';
 import Login from './steps/Login';
 import Players from './steps/Players';
 import Scores from './steps/Scores';
@@ -16,16 +17,17 @@ import SubscribeForm from './billing/SubscribeForm';
 // import Location from './steps/Location';
 // import Minigolf from './steps/Minigolf';
 
-// const steps = ['Login', 'Location', 'Players', 'Scores'];
-const steps = ['Login', 'Payment', 'Players', 'Scores'];
+// const steps = ['Launch', 'Login', 'Location', 'Players', 'Scores'];
+const steps = ['Launch', 'Login', 'Payment', 'Players', 'Scores'];
 
-export default function PlayActivities() {
+export default function GolfGame() {
 
-    const [activeStep, setActiveStep] = React.useState(0);
+    const loc = window.location;
+    const [activeStep, setActiveStep] = React.useState(1);
     const [skipped, setSkipped] = React.useState(new Set());
 
     const isStepOptional = (step) => {
-        return step === 0;
+        return step === 1;
     };
 
     const isStepSkipped = (step) => {
@@ -69,15 +71,21 @@ export default function PlayActivities() {
     function getStepContent(step) {
         switch (step) {
             case 0:
-                return <Login />;
+                return <Launch text={loc.origin} />;
             case 1:
+                return <Login />
+            case 2:
                 // return <Location />;
                 // return <PaymentForm />
                 return <SubscribeForm />
-            case 2:
-                return <Players />;
             case 3:
+                // return <Minigolf />
+                return <Players />;
+            case 4:
+                // return <Players />;
                 return <Scores />
+            case 5:
+            // return <Scores />
             default:
                 throw new Error('Unknown step');
         }
