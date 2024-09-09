@@ -11,11 +11,11 @@ import Login from './steps/Login';
 import Players from './steps/Players';
 import Scores from './steps/Scores';
 import Tally from './steps/Tally';
-import Launcher from './steps/Launcher';
+import Launch from './steps/Launch';
 // import Minigolf from './steps/Minigolf';
 
 // const steps = ['Login', 'Minigolf', 'Players', 'Scores'];
-const steps = ['Launcher', 'Login', 'Players', 'Scores'];
+const steps = ['Launch', 'Login', 'Players', 'Scores'];
 
 export default function GolfGame() {
 
@@ -68,7 +68,7 @@ export default function GolfGame() {
     function getStepContent(step) {
         switch (step) {
             case 0:
-                return <Launcher text={loc.origin} />;
+                return <Launch text={loc.origin} />;
             case 1:
                 return <Login />;
             case 2:

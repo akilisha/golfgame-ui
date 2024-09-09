@@ -95,7 +95,7 @@ export default function Scores() {
                       type='number'
                       error={valid[row.name] != undefined && valid[row.name] !== ''}
                       helperText={valid[row.name]}
-                      onFocus={event => event.target.select()}
+                      onFocus={event => event.target.value = ''}
                       disabled={hole === maxHoles} />
                   </TableCell>
                 </TableRow>
