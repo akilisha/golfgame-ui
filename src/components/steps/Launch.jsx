@@ -2,7 +2,7 @@ import * as React from 'react';
 import QRCode from 'qrcode';
 import { Paper, Typography } from '@mui/material';
 
-export default function Launcher({ text }) {
+export default function Launch({ text }) {
 
     const canvasRef = React.useRef(null);
 
@@ -23,8 +23,10 @@ export default function Launcher({ text }) {
         margin: "40px auto"
     }}>
         <canvas ref={canvasRef}></canvas>
-        <Paper elevation={3} style={{displa: 'flex', justifyContent: 'center'}}>
-            <Typography variant='"subtitle1' component={"div"} sx={{p: 2, color: 'primary.main'}}>Scan with your phone camera to launch the app</Typography>
+        <Paper elevation={3} style={{ display: 'flex', justifyContent: 'center' }}>
+            <Typography variant='"subtitle1' component={"div"} sx={{ p: 2, color: 'primary.main' }}>
+                Scan with your phone camera to launch the app
+            </Typography>
         </Paper>
     </div>
 }
