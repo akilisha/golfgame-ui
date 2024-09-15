@@ -60,7 +60,7 @@ function TopMenuBar({ auth, signOut, setMode }) {
           <MenuIcon />
         </IconButton>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          Golfgame <GolfCourseIcon sx={{ position: "absolute", top: "20px", ml: 1 }} />
+          18 Hole Game <GolfCourseIcon sx={{ position: "absolute", top: "20px", ml: 1 }} />
         </Typography>
         {auth && (
           <div>
@@ -149,7 +149,7 @@ export default function Layout({ children }) {
         >
           <Container maxWidth="sm">
             <Typography variant="body1">
-              Golfgame Companion
+              Golf Game Companion
             </Typography>
             <Copyright />
           </Container>

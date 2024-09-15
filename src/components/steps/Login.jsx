@@ -26,7 +26,7 @@ export default function Login() {
             flexDirection: 'column',
             marginTop: '30px'
         }}>
-            <ScoreHistory />;
+            <ScoreHistory />
         </div>
         }</div>
     )

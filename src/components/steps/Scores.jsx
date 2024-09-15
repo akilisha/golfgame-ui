@@ -14,16 +14,85 @@ import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import IconButton from '@mui/material/IconButton';
 import Alert from '@mui/material/Alert';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+
+function SetMaxHolesModal({ open, handleClose, maxHoles, setMaxHoles }) {
+
+  return (
+    <Dialog
+      open={open}
+      onClose={handleClose}
+      PaperProps={{
+        component: 'form',
+        onSubmit: (event) => {
+          event.preventDefault();
+          const formData = new FormData(event.currentTarget);
+          const formJson = Object.fromEntries((formData).entries());
+          const newMaxHoles = formJson.newMaxHoles;
+          console.log(newMaxHoles);
+          setMaxHoles(Number(newMaxHoles))
+          handleClose();
+        },
+      }}
+    >
+      <DialogTitle>Max Targets/Holes</DialogTitle>
+      <DialogContent>
+        <DialogContentText>
+          Change the max number of holes
+        </DialogContentText>
+        <TextField
+          autoFocus
+          required
+          margin="dense"
+          name="newMaxHoles"
+          label="New Max Holes"
+          type="number"
+          defaultValue={maxHoles}
+          fullWidth
+          variant="standard"
+        />
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose}>Cancel</Button>
+        <Button type="submit">Update</Button>
+      </DialogActions>
+    </Dialog>
+  )
+}
+
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
 
 export default function Scores() {
 
-  const { players, maxHoles, hole, setHole, updateScores } = React.useContext(AppContext);
+  const { players, maxHoles, hole, setHole, setMaxHoles, updateScores } = React.useContext(AppContext);
   const [valid, setValid] = React.useState({});
+  const [open, setOpen] = React.useState(false);
+  const handleClose = () => setOpen(false);
   //create refs for text inputs to update scores/hole 
   const refs = players.reduce((prev, curr) => {
     prev[curr.name] = React.useRef(null)
     return prev;
   }, {})
+
+  const onChangeMaxHoles = event => {
+    setOpen(event.target.checked);
+  }
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -71,7 +140,7 @@ export default function Scores() {
                 <TableCell>Player</TableCell>
                 <TableCell align="right">
                   {hole > 0 && <IconButton aria-label="previous" size="small" color="secondary" sx={{ mr: 1 }} onClick={() => setHole(hole - 1)}><RemoveIcon /></IconButton>}
-                  Hole {hole + 1}
+                  {hole + 1 > maxHoles ? "No more targets" : `Hole ${hole + 1} of ${maxHoles}`}
                   {hole < maxHoles && <IconButton aria-label="next" size="small" color="primary" sx={{ ml: 1 }} onClick={() => setHole(hole + 1)}><AddIcon /></IconButton>}
                 </TableCell>
               </TableRow>
@@ -104,22 +173,28 @@ export default function Scores() {
           </Table>
         </TableContainer>
 
-        {players?.length === 0? 
-        <Alert severity="error" sx={{ mt: 2 }}>The game has no players yet</Alert>
-        : 
-        hole < maxHoles ?
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-          >
-            Submit
-          </Button>
+        {players?.length === 0 ?
+          <Alert severity="error" sx={{ mt: 2 }}>The game has no players yet</Alert>
           :
-          <Alert severity="success" sx={{ mt: 2 }}>End of game reached</Alert>
+          hole < maxHoles ?
+            <>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Save then Next
+              </Button>
+              <FormControlLabel control={<Checkbox color="primary" onChange={onChangeMaxHoles} checked={open} />}
+                label="Change the number of targets/holes"
+              />
+            </>
+            :
+            <Alert severity="success" sx={{ mt: 2 }}>End of game reached</Alert>
         }
       </Box>
+      <SetMaxHolesModal open={open} handleClose={handleClose} maxHoles={maxHoles} setMaxHoles={setMaxHoles} />
     </div>
 
   )
