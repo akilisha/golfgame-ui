@@ -1,20 +1,27 @@
 import { createContext, useState, useEffect } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
-import { supabase, upsertPlayer, deletePlayer, selectPlayers, upsertScores, tallyScores, clearScores, selectAccount, updateAccount, deleteAccount } from '../service/suparepo';
+import {
+    supabase, upsertPlayer, deletePlayer, selectPlayers, upsertScores,
+    tallyScores, clearScores, selectAccount, updateAccount, deleteAccount,
+    upsertLocation, downloadScoresHistory, uploadScoresHistory
+} from '../service/suparepo';
 
 export const AppContext = createContext(null);
 
-export const QR_CODE_MODE = 'qr_code';
 export const GOLFING_MODE = 'golfing';
 export const PROFILE_MODE = 'profile';
 export const DELETED_MODE = 'deleted';
+export const HISTORY_MODE = 'history';
+export const LOCATION_KEY = 'selected-golf-location';
+export const HISTORY_KEY = 'scores-history';
 
 const initialState = {
     mode: GOLFING_MODE,
     players: [],
     hole: 0,
-    location: null,
-    maxHoles: Number(import.meta.env.VITE_MAX_GAME_HOLES || 18)
+    maxHoles: Number(import.meta.env.VITE_MAX_GAME_HOLES || 18),
+    location: JSON.parse(sessionStorage.getItem(LOCATION_KEY)) || null,
+    history: JSON.parse(sessionStorage.getItem(HISTORY_KEY)) || [],
 }
 
 export function AppProvider({ children }) {
@@ -50,10 +57,31 @@ export function AppProvider({ children }) {
     }
 
     function setLocation(location) {
+        if (location) {
+            sessionStorage.setItem(LOCATION_KEY, JSON.stringify(location))
+        }
+
         setState(state => ({
             ...state,
             location
-        }))
+        }));
+
+        //if session is available, update remote database
+        if (session && location) {
+            const { name, address, lat, lng } = location;
+            upsertLocation({ name, address, latitude: lat, longitude: lng })
+        }
+    }
+
+    function setHistory(history) {
+        if (location) {
+            sessionStorage.setItem(HISTORY_KEY, JSON.stringify(history))
+        }
+
+        setState(state => ({
+            ...state,
+            history
+        }));
     }
 
     function closeAccount() {
@@ -142,7 +170,8 @@ export function AppProvider({ children }) {
 
         //if session is available, clear remote database
         if (session) {
-            clearScores({ organizer: session.user.id })
+            const { location, players, history } = state;
+            clearScores({ organizer: session.user.id, location, players, history })
         }
     }
 
@@ -196,9 +225,9 @@ export function AppProvider({ children }) {
 
     return (
         <AppContext.Provider value={{
-            ...state, supabase, session, fetchProfile, updateProfile, closeAccount, fetchPlayers, addPlayer, dropPlayer,
-            updateScores, playerTally, sessionTally, resetScores, setMode, setHole, setLocation, stripePromise, createPaymentIntent,
-            createSetupIntent
+            ...state, supabase, session, fetchProfile, updateProfile, closeAccount, fetchPlayers, addPlayer, dropPlayer, updateScores,
+            playerTally, sessionTally, resetScores, setMode, setHole, setLocation, setHistory, stripePromise, createPaymentIntent, createSetupIntent,
+            downloadScoresHistory, uploadScoresHistory,
         }}>
             {children}
         </AppContext.Provider>

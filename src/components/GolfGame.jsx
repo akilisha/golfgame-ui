@@ -12,13 +12,12 @@ import Login from './steps/Login';
 import Players from './steps/Players';
 import Scores from './steps/Scores';
 import Tally from './steps/Tally';
+import GmapLocation from './steps/GmapLocation';
+// import HereLocation from './steps/HereLocation';
 // import PaymentForm from './billing/PaymentForm';
 import SubscribeForm from './billing/SubscribeForm';
-// import Location from './steps/Location';
-// import Minigolf from './steps/Minigolf';
 
-// const steps = ['Launch', 'Login', 'Location', 'Players', 'Scores'];
-const steps = ['Launch', 'Login', 'Payment', 'Players', 'Scores'];
+const steps = ['Launch', 'Location', 'Login', 'Payment', 'Players', 'Scores'];
 
 export default function GolfGame() {
 
@@ -27,7 +26,7 @@ export default function GolfGame() {
     const [skipped, setSkipped] = React.useState(new Set());
 
     const isStepOptional = (step) => {
-        return step === 1;
+        return step === 2;
     };
 
     const isStepSkipped = (step) => {
@@ -73,19 +72,17 @@ export default function GolfGame() {
             case 0:
                 return <Launch text={loc.origin} />;
             case 1:
-                return <Login />
+                // return <HereLocation />
+                return <GmapLocation />;
             case 2:
-                // return <Location />;
+                return <Login />
+            case 3:
                 // return <PaymentForm />
                 return <SubscribeForm />
-            case 3:
-                // return <Minigolf />
-                return <Players />;
             case 4:
-                // return <Players />;
-                return <Scores />
+                return <Players />;
             case 5:
-            // return <Scores />
+                return <Scores />
             default:
                 throw new Error('Unknown step');
         }

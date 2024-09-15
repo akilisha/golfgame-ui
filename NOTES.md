@@ -64,14 +64,11 @@ AFTER
 create table if not exists public.mg_location(
   id uuid not null default gen_random_uuid(),
   name text not null,
-  street text not null,
-  city text not null,
-  state_zip text not null,
-  country text not null,
+  address text not null,
   latitude float not null,
   longitude float not null,
   date_created timestamp with time zone default timezone('utc'::text, now()) not null,
-  constraint uniq_place unique(name, city, state_zip),
+  constraint uniq_geolocation unique(latitude, longitude),
   constraint location_pk primary key(id)
 );
 
@@ -80,19 +77,22 @@ ALTER TABLE public.mg_location ENABLE ROW LEVEL SECURITY;
 
 
 -- Create Policy around mg_location
-create policy "Anyone can view entries in mg_location table."
+create policy "Only authenticated users can view entries in mg_location table."
 on mg_location for select
-to anon;
+to authenticated
+using ( true );
 
 
-create policy "Anyone can insert records in mg_location table."
+create policy "Only authenticated users can insert records in mg_location table."
 on mg_location for insert
-to anon;
+to authenticated
+using ( true );
 
 
-create policy "Anyone can update records in mg_location table."
+create policy "Only authenticated users can update records in mg_location table."
 on mg_location for update
-to anon;
+to authenticated
+using ( true );
 
 
 create table if not exists public.mg_player (
@@ -100,7 +100,6 @@ create table if not exists public.mg_player (
   player text not null,
   hole int not null default 1,
   score int not null default 0,
-  location uuid references public.mg_location (id),
   last_updated timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
@@ -170,6 +169,15 @@ CREATE POLICY "Only authenticated account owner can delete their account."
   USING ( auth.uid() = id );
 
 select delete_account('some_valid_user_id');
+
+
+create or replace function game_clean_up (organizer text) 
+returns void
+language sql
+as $$ 
+  delete from mg_player where organizer::uuid = organizer and hole > 1;
+  update mg_player set score = 0 where organizer = organizer::uuid;
+$$;
 ```
 
 ## Create supabase function
@@ -231,3 +239,20 @@ npx supabase secrets set --env-file ./supabase/functions/.env
 npx supabase secrets list
 ```
 
+# storage bucket policies
+
+```bash
+CREATE POLICY "Only authenticated users can insert items in scores_history bucket" 
+ON storage.objects FOR INSERT TO authenticated 
+WITH CHECK (bucket_id = 'scores_history');
+
+
+CREATE POLICY "Only authenticated users can update items in scores_history bucket" 
+ON storage.objects FOR UPDATE TO authenticated 
+USING (bucket_id = 'scores_history');
+
+
+CREATE POLICY "Only authenticated users can read items in scores_history bucket" 
+ON storage.objects FOR SELECT TO authenticated 
+USING (bucket_id = 'scores_history');
+```

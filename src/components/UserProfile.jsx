@@ -17,27 +17,25 @@ import { AppContext, DELETED_MODE } from '../state/AppContext';
 function ConfirmDialog({ open, handleConfirm }) {
 
     return (
-        <React.Fragment>
-            <Dialog
-                open={open}
-                onClose={() => handleConfirm(false)}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogTitle id="alert-dialog-title">
-                    Proceed with extreme caution
-                </DialogTitle>
-                <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        Are you sure you want to proceed? This action will delete everything related to this user.
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => handleConfirm(false)}>Cancel</Button>
-                    <Button onClick={() => handleConfirm(true)} autoFocus>Confirm</Button>
-                </DialogActions>
-            </Dialog>
-        </React.Fragment>
+        <Dialog
+            open={open}
+            onClose={() => handleConfirm(false)}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+        >
+            <DialogTitle id="alert-dialog-title">
+                Proceed with extreme caution
+            </DialogTitle>
+            <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                    Are you sure you want to proceed? This action will delete everything related to this user.
+                </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={() => handleConfirm(false)}>Cancel</Button>
+                <Button onClick={() => handleConfirm(true)} autoFocus>Confirm</Button>
+            </DialogActions>
+        </Dialog>
     );
 }
 

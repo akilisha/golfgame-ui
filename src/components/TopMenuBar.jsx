@@ -8,32 +8,54 @@ import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import Typography from '@mui/material/Typography';
 import GolfCourseIcon from '@mui/icons-material/GolfCourse';
-import { GOLFING_MODE, PROFILE_MODE, QR_CODE_MODE } from '../state/AppContext';
+import { GOLFING_MODE, PROFILE_MODE, HISTORY_MODE } from '../state/AppContext';
 
 export default function TopMenuBar({ auth, mode, signOut, setMode }) {
 
     const [anchorEl, setAnchorEl] = React.useState(null);
+    const [golfGame, setGolfGame] = React.useState(true);
     const [profile, setProfile] = React.useState(false);
-    const [demo, setDemo] = React.useState(false);
+    const [history, setHistory] = React.useState(false);
     const [lastMode, setLastMode] = React.useState(mode);
   
-    const toggleProfile = (event) => {
+    const toggleGame = (event) => {
       setAnchorEl(event.currentTarget);
-      setMode(profile ? GOLFING_MODE : PROFILE_MODE)
-      setProfile(!profile);
+      if(!golfGame){
+        setLastMode(mode);
+        setMode(GOLFING_MODE);
+      }
+      else{
+        setMode(lastMode);
+      }
+      setGolfGame(!golfGame);
+      handleClose();
     };
 
-    const toggleQrCode = () => {
-        setAnchorEl(event.currentTarget);
-        if(!demo){
-          setLastMode(mode);
-          setMode(QR_CODE_MODE);
-        }
-        else{
-          setMode(lastMode);
-        }
-        setDemo(!demo);
-    }
+    const toggleProfile = (event) => {
+      setAnchorEl(event.currentTarget);
+      if(!profile){
+        setLastMode(mode);
+        setMode(PROFILE_MODE);
+      }
+      else{
+        setMode(lastMode);
+      }
+      setProfile(!profile);
+      handleClose();
+    };
+
+    const toggleHistory = (event) => {
+      setAnchorEl(event.currentTarget);
+      if(!history){
+        setLastMode(mode);
+        setMode(HISTORY_MODE);
+      }
+      else{
+        setMode(lastMode);
+      }
+      setHistory(!history);
+      handleClose();
+  }
   
     const handleMenu = (event) => {
       setAnchorEl(event.currentTarget);
@@ -85,9 +107,10 @@ export default function TopMenuBar({ auth, mode, signOut, setMode }) {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                <MenuItem onClick={toggleProfile}>{profile ? "Golfgame" : "Profile"}</MenuItem>
-                <MenuItem onClick={toggleQrCode}>{demo? 'Hide QR Code' : 'Show QR Code'}</MenuItem>
-                <MenuItem onClick={signOut}>Sign Out</MenuItem>
+                <MenuItem onClick={toggleGame}>{"Show Golfgame"}</MenuItem>
+                <MenuItem onClick={toggleProfile}>{"Profile"}</MenuItem>
+                <MenuItem onClick={toggleHistory}>{"Scores History"}</MenuItem>
+                <MenuItem onClick={signOut}>{"Sign Out"}</MenuItem>
               </Menu>
             </div>
           )}

@@ -28,7 +28,7 @@ export default function Tally({ handleReset }) {
           <TableHead>
             <TableRow>
               <TableCell>Player</TableCell>
-              {[...Array(maxHoles).keys()].map(hole => <TableCell>{hole + 1}</TableCell>)}
+              {[...Array(maxHoles).keys()].map(hole => <TableCell key={hole}>{hole + 1}</TableCell>)}
               <TableCell align="right">Final</TableCell>
             </TableRow>
           </TableHead>
@@ -41,7 +41,7 @@ export default function Tally({ handleReset }) {
                 <TableCell component="th" scope="row">
                   {row.name}
                 </TableCell>
-                {row.scores.map(score => <TableCell>{score}</TableCell>)}
+                {row.scores.map((score, i) => <TableCell key={i}>{score}</TableCell>)}
                 <TableCell align="right">{playerTally(row.name)}</TableCell>
               </TableRow>
             ))}
