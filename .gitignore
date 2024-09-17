@@ -49,3 +49,6 @@ logs
 
 # Environment variables
 .env*
+
+# misc
+sample.json
