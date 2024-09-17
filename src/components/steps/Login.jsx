@@ -2,11 +2,10 @@ import * as React from 'react';
 import { AppContext } from '../../state/AppContext';
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
-import ScoreHistory from '../ScoreHistory';
+import Milestones from './Milestones';
 
 export default function Login() {
 
-    const loc = window.location;
     const { supabase, session } = React.useContext(AppContext);
 
     return (<div style={{
@@ -18,7 +17,7 @@ export default function Login() {
             supabaseClient={supabase}
             appearance={{ theme: ThemeSupa }}
             providers={["google"]}
-            redirectTo={loc.origin}
+            redirectTo={window.location?.origin}
         />
         :
         <div style={{
@@ -26,7 +25,7 @@ export default function Login() {
             flexDirection: 'column',
             marginTop: '30px'
         }}>
-            <ScoreHistory />
+            <Milestones />
         </div>
         }</div>
     )

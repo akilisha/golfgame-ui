@@ -2,8 +2,9 @@ import { useContext, useEffect, useState } from 'react'
 import Layout from './components/Layout';
 import UserDeleted from './components/UserDeleted';
 import GolfGame from './components/GolfGame';
-import { AppContext, GOLFING_MODE, DELETED_MODE, PROFILE_MODE } from './state/AppContext';
+import { AppContext, GOLFING_MODE, DELETED_MODE, HISTORY_MODE } from './state/AppContext';
 import UserProfile from './components/UserProfile';
+import ScoreHistory from './components/ScoreHistory';
 
 export default function App() {
 
@@ -12,7 +13,8 @@ export default function App() {
   const views = {
     DELETED_MODE: <UserDeleted />,
     GOLFING_MODE: <GolfGame />,
-    PROFILE_MODE: <UserProfile />
+    PROFILE_MODE: <UserProfile />,
+    HISTORY_MODE: <ScoreHistory />,
   }
 
   useEffect(() => {
@@ -22,6 +24,9 @@ export default function App() {
         break;
       case GOLFING_MODE:
         setCurrent(views.GOLFING_MODE)
+        break;
+      case HISTORY_MODE:
+        setCurrent(views.HISTORY_MODE)
         break;
       default:
         setCurrent(views.PROFILE_MODE)
