@@ -15,6 +15,20 @@ export const HISTORY_MODE = 'history';
 export const LOCATION_KEY = 'selected-golf-location';
 export const HISTORY_KEY = 'scores-history';
 
+export const scoringTerms = {
+    Stroke: "Any forward club swing that's intended to hit the golf ball",
+    Par: "The number of strokes an expert player is expected to make for a given hole or a group of holes (usually 9 or 18)",
+    Birdie: "One stroke under par on an individual hole",
+    Eagle: "Two strokes under par on an individual hole",
+    ["Albatross / Double Eagle"]: "Three strokes under par on an individual hole",
+    Condor: "Four strokes under par on an individual hole",
+    ["Ace / Hole-in-One"]: "Getting the ball in the hole (cup) in only one stroke",
+    Bogey: "One stroke over par on an individual hole",
+    ["Double Bogey"]: "Two strokes over par on an individual hole",
+    ["Triple Bogey"]: "Three strokes over par on an individual hole",
+    ["Quadruple Bogey"]: "Four strokes over par on an individual hole",
+};
+
 const initialState = {
     mode: GOLFING_MODE,
     players: [],
@@ -53,6 +67,13 @@ export function AppProvider({ children }) {
         setState(state => ({
             ...state,
             hole
+        }))
+    }
+
+    function setMaxHoles(maxHoles) {
+        setState(state => ({
+            ...state,
+            maxHoles
         }))
     }
 

@@ -71,7 +71,7 @@ export default function Layout({ children }) {
         >
           <Container maxWidth="sm">
             <Typography variant="body1">
-              Golfgame Companion
+              Golf Game Companion
             </Typography>
             <Copyright />
           </Container>
