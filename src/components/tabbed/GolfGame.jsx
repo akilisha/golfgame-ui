@@ -7,26 +7,21 @@ import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Button from '@mui/material/Button';
-import Launch from './steps/Launch';
-import Login from './steps/Login';
-import Players from './steps/Players';
-import Scores from './steps/Scores';
-import Tally from './steps/Tally';
-import GmapLocation from './steps/GmapLocation';
-// import HereLocation from './steps/HereLocation';
-// import PaymentForm from './billing/PaymentForm';
-import SubscribeForm from './billing/SubscribeForm';
+import Login from '../steps/Login';
+import Players from '../steps/Players';
+import Scores from '../steps/Scores';
+import Tally from '../steps/Tally';
+import { Paper } from '@mui/material';
 
-const steps = ['Launch', 'Location', 'Login', 'Payment', 'Players', 'Scores'];
+const steps = ['Login', 'Players', 'Scores'];
 
 export default function GolfGame() {
 
-    const loc = window.location;
     const [activeStep, setActiveStep] = React.useState(1);
     const [skipped, setSkipped] = React.useState(new Set());
 
     const isStepOptional = (step) => {
-        return step === 2;
+        return step === 0;
     };
 
     const isStepSkipped = (step) => {
@@ -70,18 +65,10 @@ export default function GolfGame() {
     function getStepContent(step) {
         switch (step) {
             case 0:
-                return <Launch text={loc.origin} />;
-            case 1:
-                // return <HereLocation />
-                return <GmapLocation />;
-            case 2:
                 return <Login />
-            case 3:
-                // return <PaymentForm />
-                return <SubscribeForm />
-            case 4:
+            case 1:
                 return <Players />;
-            case 5:
+            case 2:
                 return <Scores />
             default:
                 throw new Error('Unknown step');
@@ -89,8 +76,9 @@ export default function GolfGame() {
     }
 
     return (
-        <Box component="main" sx={{
+        <Paper component="main" elevation={3} sx={{
             marginTop: 8,
+            padding: '0px 10px 20px',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
@@ -146,6 +134,6 @@ export default function GolfGame() {
                     </React.Fragment>
                 )}
             </Box>
-        </Box>
+        </Paper>
     )
 }

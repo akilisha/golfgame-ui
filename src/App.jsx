@@ -1,42 +1,66 @@
-import { useContext, useEffect, useState } from 'react'
 import Layout from './components/Layout';
 import UserDeleted from './components/UserDeleted';
-import GolfGame from './components/GolfGame';
-import { AppContext, GOLFING_MODE, DELETED_MODE, HISTORY_MODE } from './state/AppContext';
 import UserProfile from './components/UserProfile';
 import ScoreHistory from './components/ScoreHistory';
+import ErrorPage from './components/tabbed/ErrorPage'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import TabbedView from './components/tabbed/TabbedView';
+import Launcher from './components/tabbed/Launcher';
+import GmapLocation from './components/tabbed/GmapLocation';
+import SubscribeForm from './components/billing/SubscribeForm';
+import GolfGame from './components/tabbed/GolfGame';
 
 export default function App() {
 
-  const { mode } = useContext(AppContext);
-  const [current, setCurrent] = useState(null);
-  const views = {
-    DELETED_MODE: <UserDeleted />,
-    GOLFING_MODE: <GolfGame />,
-    PROFILE_MODE: <UserProfile />,
-    HISTORY_MODE: <ScoreHistory />,
-  }
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: <Layout />,
+      errorElement: <ErrorPage />,
+      children: [
+        {
+          path: "/",
+          element: <TabbedView />,
+          children: [
+            {
+              path: "/",
+              element: <Launcher text={window.location.origin} />
+            },
+            {
+              path: "/location",
+              element: <GmapLocation />
+              //<HereLocation />
+            },
+            {
+              path: "/playing",
+              element: <GolfGame />
+            },
+          ]
+        },
+        {
+          path: "/profile",
+          element: <UserProfile />,
+        },
+        {
+          path: "/subscribe",
+          element: <SubscribeForm />
+          // <PaymentForm />
+        },
+        {
+          path: "/history",
+          element: <ScoreHistory />,
+        },
+        {
+          path: "/confirmation",
+          element: <UserDeleted />,
+        }
+      ],
+    },
 
-  useEffect(() => {
-    switch (mode) {
-      case DELETED_MODE:
-        setCurrent(views.DELETED_MODE)
-        break;
-      case GOLFING_MODE:
-        setCurrent(views.GOLFING_MODE)
-        break;
-      case HISTORY_MODE:
-        setCurrent(views.HISTORY_MODE)
-        break;
-      default:
-        setCurrent(views.PROFILE_MODE)
-    }
-  }, [mode])
+  ]);
 
   return (
-    <Layout>
-      {current}
-    </Layout>
+    <RouterProvider router={router} />
   )
 }
 

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { AppContext } from '../../state/AppContext';
-import { Typography } from '@mui/material';
-import { Box } from '@mui/material';
+import { Paper, Typography } from '@mui/material';
 import { APIProvider, Map, Marker, InfoWindow, useMap, useMarkerRef, useMapsLibrary } from '@vis.gl/react-google-maps';
 
 
@@ -82,7 +81,7 @@ function MapComponent() {
     var vicinity = new google.maps.LatLng(lat, lng);
     var request = {
       location: vicinity,
-      query: 'minigolf near me'
+      query: 'golf, freesbie, minigolf near me'
     };
 
     placesService.textSearch(request, callback);
@@ -140,8 +139,8 @@ function MapComponent() {
   }, []);
 
   return (
-    <Box component="section" sx={{ p: 2, border: '1px dashed grey' }}>
-      <Typography variant="h6" style={{ textAlign: "center" }}>{location ? location.name : "Select your golf location"}</Typography>
+    <Paper component="section" elevation={3} sx={{ p: 2 }}>
+      <Typography variant="h6" style={{ textAlign: "center" }}>{location ? location.name : "Tap on your location icon"}</Typography>
       <div style={{
         width: "100%",
         height: "50vh",
@@ -152,6 +151,6 @@ function MapComponent() {
           <MarkerWithInfoWindow position={myLocation} title={"This is your current location"} image={"src/assets/golfstick.png"} />
         </Map>
       </div>
-    </Box>
+    </Paper>
   )
 }
