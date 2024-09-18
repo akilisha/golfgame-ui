@@ -6,7 +6,8 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Link from '@mui/material/Link';
 import TopMenuBar from './TopMenuBar';
-import { AppContext, GOLFING_MODE, PROFILE_MODE } from '../state/AppContext';
+import { AppContext, } from '../state/AppContext';
+import { Outlet } from "react-router-dom";
 
 function Copyright() {
   return (
@@ -21,9 +22,9 @@ function Copyright() {
   );
 }
 
-export default function Layout({ children }) {
+export default function Layout() {
 
-  const { supabase, session, setMode } = React.useContext(AppContext);
+  const { supabase, session } = React.useContext(AppContext);
 
   const greenTheme = createTheme({
     palette: {
@@ -53,9 +54,9 @@ export default function Layout({ children }) {
         }}
       >
         <CssBaseline />
-        <TopMenuBar auth={session?.user} signOut={() => supabase.auth.signOut()} setMode={setMode} />
-        <Container component="main" sx={{ mb: 2 }} maxWidth="md">
-          {children}
+        <TopMenuBar auth={session?.user} signOut={() => supabase.auth.signOut()}/>
+        <Container component="main" sx={{ mb: 2, bottom: '10px' }} maxWidth="md">
+          <Outlet />
         </Container>
         <Box
           component="footer"
@@ -71,7 +72,7 @@ export default function Layout({ children }) {
         >
           <Container maxWidth="sm">
             <Typography variant="body1">
-              Golf Game Companion
+              Golfing Companion
             </Typography>
             <Copyright />
           </Container>

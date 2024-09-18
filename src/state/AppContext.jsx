@@ -8,11 +8,7 @@ import {
 
 export const AppContext = createContext(null);
 
-export const GOLFING_MODE = 'golfing';
-export const PROFILE_MODE = 'profile';
-export const DELETED_MODE = 'deleted';
-export const HISTORY_MODE = 'history';
-export const LOCATION_KEY = 'selected-golf-location';
+export const LOCATION_KEY = 'selected-location';
 export const HISTORY_KEY = 'scores-history';
 
 export const scoringTerms = {
@@ -30,7 +26,6 @@ export const scoringTerms = {
 };
 
 const initialState = {
-    mode: GOLFING_MODE,
     players: [],
     hole: 0,
     maxHoles: Number(import.meta.env.VITE_MAX_GAME_HOLES || 18),
@@ -55,13 +50,6 @@ export function AppProvider({ children }) {
         });
         return () => subscription.unsubscribe();
     }, []);
-
-    function setMode(mode) {
-        setState(state => ({
-            ...state,
-            mode
-        }))
-    }
 
     function setHole(hole) {
         setState(state => ({
@@ -247,7 +235,7 @@ export function AppProvider({ children }) {
     return (
         <AppContext.Provider value={{
             ...state, supabase, session, fetchProfile, updateProfile, closeAccount, fetchPlayers, addPlayer, dropPlayer, updateScores,
-            playerTally, sessionTally, resetScores, setMode, setHole, setLocation, setHistory, stripePromise, createPaymentIntent, createSetupIntent,
+            playerTally, sessionTally, resetScores, setHole, setLocation, setHistory, stripePromise, createPaymentIntent, createSetupIntent,
             downloadScoresHistory, uploadScoresHistory,
         }}>
             {children}
