@@ -2,7 +2,7 @@ import * as React from 'react';
 import { AppContext } from '../../state/AppContext';
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
-import Milestones from './Milestones';
+import Welcome from './Welcome';
 
 export default function Login() {
 
@@ -25,7 +25,7 @@ export default function Login() {
             flexDirection: 'column',
             marginTop: '30px'
         }}>
-            <Milestones />
+            <Welcome />
         </div>
         }</div>
     )

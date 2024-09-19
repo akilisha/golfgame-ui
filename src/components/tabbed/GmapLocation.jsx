@@ -139,7 +139,7 @@ function MapComponent() {
   }, []);
 
   return (
-    <Paper component="section" elevation={3} sx={{ p: 2 }}>
+    <Paper component="section" elevation={3} sx={{ mt: 4, p: 2 }}>
       <Typography variant="h6" style={{ textAlign: "center" }}>{location ? location.name : "Tap on your location icon"}</Typography>
       <div style={{
         width: "100%",

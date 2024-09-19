@@ -40,6 +40,8 @@ function ConfirmDialog({ open, handleConfirm }) {
     );
 }
 
+//TODO: add <SubscriberForm/> and <PaymentForm/> options here
+
 export default function UserProfile() {
 
     const [open, setOpen] = React.useState(false);

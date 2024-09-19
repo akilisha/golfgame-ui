@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Alert } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import GolfCourseIcon from '@mui/icons-material/GolfCourse';
@@ -12,6 +13,7 @@ import Players from '../steps/Players';
 import Scores from '../steps/Scores';
 import Tally from '../steps/Tally';
 import { Paper } from '@mui/material';
+import { AppContext } from '../../state/AppContext';
 
 const steps = ['Login', 'Players', 'Scores'];
 
@@ -19,6 +21,7 @@ export default function GolfGame() {
 
     const [activeStep, setActiveStep] = React.useState(1);
     const [skipped, setSkipped] = React.useState(new Set());
+    const { location } = React.useContext(AppContext);
 
     const isStepOptional = (step) => {
         return step === 0;
@@ -77,13 +80,13 @@ export default function GolfGame() {
 
     return (
         <Paper component="main" elevation={3} sx={{
-            marginTop: 8,
+            marginTop: 4,
             padding: '0px 10px 20px',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
         }}>
-            <Avatar sx={{ mb: 4, bgcolor: 'secondary.main' }}>
+            <Avatar sx={{ mt: 2, mb: 2, bgcolor: 'secondary.main' }}>
                 <GolfCourseIcon />
             </Avatar>
 
@@ -127,7 +130,8 @@ export default function GolfGame() {
                                     Skip
                                 </Button>
                             )}
-                            <Button onClick={handleNext}>
+                            {!location && <Alert severity='error'>Select your location first to continue</Alert>}
+                            <Button onClick={handleNext} disabled={!location}>
                                 {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
                             </Button>
                         </Box>

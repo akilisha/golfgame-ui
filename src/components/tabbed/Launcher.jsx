@@ -17,9 +17,8 @@ export default function Launcher({ text }) {
         }
     }, []);
 
-
     return (
-        <Paper elevation={3} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+        <Paper elevation={3} sx={{mt: 4}} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center',}}>
             <canvas ref={canvasRef}></canvas>
             <Typography variant='h5' component={"div"} sx={{ p: 2, color: 'primary.main', textAlign: 'center' }}>
                 Scan with your phone camera to launch the app

@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 import Typography from '@mui/material/Typography';
 import GolfCourseIcon from '@mui/icons-material/GolfCourse';
 
-export default function TopMenuBar({ auth, mode, signOut }) {
+export default function TopMenuBar({ auth, signOut }) {
 
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -26,6 +26,12 @@ export default function TopMenuBar({ auth, mode, signOut }) {
     navigate(path);
     handleClose();
   };
+
+  const handleSignOut = () => {
+    signOut();
+    navigate("/");
+    handleClose();
+  }
 
   const navigate = useNavigate();
 
@@ -72,9 +78,8 @@ export default function TopMenuBar({ auth, mode, signOut }) {
               onClose={handleClose}
             >
               <MenuItem onClick={() => navigateAndClose("/profile")}>{"Profile"}</MenuItem>
-              <MenuItem onClick={() => navigateAndClose("/subscribe")}>{"Subscription"}</MenuItem>
               <MenuItem onClick={() => navigateAndClose("/history")}>{"Scores History"}</MenuItem>
-              <MenuItem onClick={signOut}>{"Sign Out"}</MenuItem>
+              <MenuItem onClick={handleSignOut}>{"Sign Out"}</MenuItem>
             </Menu>
           </div>
         )}

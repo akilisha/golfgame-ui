@@ -21,7 +21,7 @@ export default function Tally({ handleReset }) {
 
   return (
     <div style={{
-      margin: "40px auto"
+      margin: "40px auto 0"
     }}>
       <TableContainer component={Paper}>
         <Table sx={{}} aria-label="simple table">
@@ -51,7 +51,7 @@ export default function Tally({ handleReset }) {
 
       <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
         <Box sx={{ flex: '1 1 auto' }} />
-        <Button onClick={onReset}>Reset</Button>
+        <Button onClick={onReset}>Save & Reset</Button>
       </Box>
     </div>
 
