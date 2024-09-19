@@ -120,7 +120,7 @@ function MapComponent() {
         setSelected(prev => {
           prev?.setIcon(null);
           return marker;
-      });
+        });
 
         //set selected golf location
         const { name, formatted_address, geometry: { location: { lat, lng } } } = place;
@@ -145,7 +145,7 @@ function MapComponent() {
         width: "100%",
         height: "50vh",
         margin: "10px auto",
-        padding: 0
+        padding: 0,
       }}>
         <Map defaultCenter={myLocation} defaultZoom={10} gestureHandling={'greedy'} disableDefaultUI={true} reuseMaps={true}>
           <MarkerWithInfoWindow position={myLocation} title={"This is your current location"} image={"src/assets/golfstick.png"} />
