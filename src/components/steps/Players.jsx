@@ -22,7 +22,7 @@ export default function Players() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const name = data.get('player');
-    
+
     if (!name || name.trim().length === 0) {
       setError(`player name is missing`)
     }
@@ -30,17 +30,17 @@ export default function Players() {
       setError(`player '${name}' already exists`)
     }
     else {
-      addPlayer({player: name});
+      addPlayer({ player: name });
       setError('')
     }
     event.currentTarget.reset();
   };
 
   React.useEffect(() => {
-    if(session){
-      (async function(){
+    if (session) {
+      (async function () {
         const players = await fetchPlayers();
-        for(let row of players){
+        for (let row of players) {
           addPlayer(row)
         }
       })();
@@ -53,11 +53,10 @@ export default function Players() {
       margin: "40px auto"
     }}>
       <TableContainer component={Paper}>
-        <Table sx={{}} aria-label="simple table">
+        <Table aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell>Player</TableCell>
-              <TableCell align="right"></TableCell>
+              <TableCell align="left" colSpan={2}>Player</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -70,7 +69,7 @@ export default function Players() {
                   {row.name}
                 </TableCell>
                 <TableCell align="right">
-                <IconButton color="secondary" aria-label="drop player" size='small' onClick={() => dropPlayer(row.name)}>
+                  <IconButton color="secondary" aria-label="drop player" size='small' onClick={() => dropPlayer(row.name)}>
                     <HighlightOffIcon />
                   </IconButton>
                 </TableCell>

@@ -20,20 +20,16 @@ export async function deletePlayer({ organizer, player }) {
         .delete()
         .eq('organizer', organizer)
         .eq('player', player)
-        .is("location", null)
     if (error) {
         console.log(error)
     }
 }
 
-export async function upsertLocation({ name, address, location }) {
-    //TODO: NOT YET IMPLEMENTED FOR LOCATION
-    const record = Object.keys(strokes).map(name => {
-        return ({ organizer, player: name, hole: hole + 1, score: Number(strokes[name]) })
-    });
+export async function upsertLocation({ name, address, latitude, longitude }) {
+    const record = ({ name, address, latitude, longitude });
     const { data, error } = await supabase
-        .from('mg_player')
-        .upsert(record, { onConflict: 'organizer, player, hole', ignoreDuplicates: false })
+        .from('mg_location')
+        .upsert(record, { onConflict: 'latitude, longitude', ignoreDuplicates: false })
         .select()
     if (error) {
         console.log(error)
@@ -61,7 +57,6 @@ export async function tallyScores({ organizer, player }) {
         .select()
         .eq('organizer', organizer)
         .eq('player', player)
-        .is('location', null)
     if (error) {
         console.log(error)
         throw Error(error)
@@ -72,15 +67,17 @@ export async function tallyScores({ organizer, player }) {
     }, 0)
 }
 
-export async function clearScores({ organizer }) {
-    const { error } = await supabase
-        .from('mg_player')
-        .delete()
-        .eq('organizer', organizer)
-        .is('location', null)
-        .gt('hole', 1)
-    if (error) {
-        console.log(error)
+export async function clearScores({ organizer, location, players, history }) {
+    try {
+        uploadScoresHistory({ organizer, location, players, history });
+
+        const { error } = await supabase.rpc('game_clean_up', { organizer })
+        if (error) {
+            console.log(error)
+            throw Error(error)
+        }
+    } catch (err) {
+        console.log(`Error trying to clear scores - ${err.message}`)
     }
 }
 
@@ -113,11 +110,11 @@ export async function updateAccount({ organizer, firstName, lastName, phoneNum }
     console.log('updated profile', data)
 }
 
-export async function deleteAccount({organizer}) {
+export async function deleteAccount({ organizer }) {
     const { error: err1 } = await supabase.auth.signOut()
 
     if (!err1) {
-        const { error: err2 } = await supabase.rpc("delete_account", {organizer_input: organizer})
+        const { error: err2 } = await supabase.rpc("delete_account", { organizer_input: organizer })
 
         if (err2) {
             console.log(err2)
@@ -127,7 +124,7 @@ export async function deleteAccount({organizer}) {
 }
 
 export async function selectPlayers({ organizer }) {
-    let { data: players, error } = await supabase
+    const { data: players, error } = await supabase
         .from('mg_player')
         .select('player,hole,score', { distinct: true })
         .eq('organizer', organizer);
@@ -140,3 +137,57 @@ export async function selectPlayers({ organizer }) {
     return players;
 }
 
+export async function uploadScoresHistory({ organizer, history }) {
+    const bucketPath = `/${import.meta.env.VITE_ROOT_SCORES_BUCKET}/${organizer}`;
+    const targetFile = import.meta.env.VITE_SCORES_HISTORY_FILE;
+
+    const blob = new Blob([JSON.stringify(history, null, 2)], {
+        type: "application/json",
+    });
+
+    const { data: updateRes, error: updateErr } = await supabase.storage
+        .from(bucketPath)
+        .update(targetFile, blob, {
+            cacheControl: '3600',
+            upsert: true
+        });
+
+    if (updateErr && updateErr.message === "Object not found") {
+        const { data: uploadRes, error: uploadErr } = await supabase.storage
+            .from(bucketPath)
+            .upload(targetFile, blob);
+
+
+        if (uploadErr) {
+            console.log(`upload failure: ${uploadErr.message}`)
+            throw Error(uploadErr);
+        }
+
+        console.log(`upload new file result: ${JSON.stringify(uploadRes)}`)
+    }
+
+    console.log(`update existing file result: ${JSON.stringify(updateRes)}`)
+}
+
+export async function downloadScoresHistory({ organizer }) {
+    const bucketPath = `/${import.meta.env.VITE_ROOT_SCORES_BUCKET}/${organizer}`;
+    const targetFile = import.meta.env.VITE_SCORES_HISTORY_FILE;
+
+    const { data, error } = await supabase.storage
+        .from(bucketPath)
+        .download(targetFile);
+
+    if (error) {
+        console.log(error);
+        return [];
+    }
+
+    try {
+        const text = await data.text();
+        const parsed = JSON.parse(text);
+        return Array.isArray(parsed) ? parsed : [];
+    }
+    catch (e) {
+        return [];
+    }
+}

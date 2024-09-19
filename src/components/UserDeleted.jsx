@@ -12,11 +12,11 @@ import WorkIcon from '@mui/icons-material/Work';
 import BeachAccessIcon from '@mui/icons-material/BeachAccess';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import { AppContext, GOLFING_MODE } from '../state/AppContext';
+import { useNavigate } from 'react-router-dom';
 
 export default function UserDeleted() {
 
-    const {setMode} = React.useContext(AppContext);
+    const navigate = useNavigate();
 
     return (
         <Box
@@ -65,7 +65,7 @@ export default function UserDeleted() {
                 </ListItem>
             </List>
             <Stack spacing={2} direction="row">
-                <Button variant="outlined" onClick={() => setMode(GOLFING_MODE)}>Ok</Button>
+                <Button variant="outlined" onClick={() => navigate("/")}>Ok</Button>
             </Stack>
         </Box>
     );

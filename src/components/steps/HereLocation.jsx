@@ -3,7 +3,7 @@ import { AppContext } from '../../state/AppContext';
 import { Typography } from '@mui/material';
 import { Box } from '@mui/material';
 
-export default function Minigolf() {
+export default function HereLocation() {
 
   const mapRef = React.useRef(null);
   const [myLocation, setMyLocation] = React.useState(null);

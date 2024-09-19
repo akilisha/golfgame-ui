@@ -21,14 +21,14 @@ export default function Tally({ handleReset }) {
 
   return (
     <div style={{
-      margin: "40px auto"
+      margin: "40px auto 0"
     }}>
       <TableContainer component={Paper}>
         <Table sx={{}} aria-label="simple table">
           <TableHead>
             <TableRow>
               <TableCell>Player</TableCell>
-              {[...Array(maxHoles).keys()].map(hole => <TableCell>{hole + 1}</TableCell>)}
+              {[...Array(maxHoles).keys()].map(hole => <TableCell key={hole}>{hole + 1}</TableCell>)}
               <TableCell align="right">Final</TableCell>
             </TableRow>
           </TableHead>
@@ -41,7 +41,7 @@ export default function Tally({ handleReset }) {
                 <TableCell component="th" scope="row">
                   {row.name}
                 </TableCell>
-                {row.scores.map(score => <TableCell>{score}</TableCell>)}
+                {row.scores.map((score, i) => <TableCell key={i}>{score}</TableCell>)}
                 <TableCell align="right">{playerTally(row.name)}</TableCell>
               </TableRow>
             ))}
@@ -51,7 +51,7 @@ export default function Tally({ handleReset }) {
 
       <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
         <Box sx={{ flex: '1 1 auto' }} />
-        <Button onClick={onReset}>Reset</Button>
+        <Button onClick={onReset}>Save & Reset</Button>
       </Box>
     </div>
 

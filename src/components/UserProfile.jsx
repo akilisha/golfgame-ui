@@ -12,46 +12,48 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import { AppContext, DELETED_MODE } from '../state/AppContext';
+import { AppContext } from '../state/AppContext';
+import { useNavigate } from 'react-router-dom';
 
 function ConfirmDialog({ open, handleConfirm }) {
 
     return (
-        <React.Fragment>
-            <Dialog
-                open={open}
-                onClose={() => handleConfirm(false)}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogTitle id="alert-dialog-title">
-                    Proceed with extreme caution
-                </DialogTitle>
-                <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        Are you sure you want to proceed? This action will delete everything related to this user.
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => handleConfirm(false)}>Cancel</Button>
-                    <Button onClick={() => handleConfirm(true)} autoFocus>Confirm</Button>
-                </DialogActions>
-            </Dialog>
-        </React.Fragment>
+        <Dialog
+            open={open}
+            onClose={() => handleConfirm(false)}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+        >
+            <DialogTitle id="alert-dialog-title">
+                Proceed with extreme caution
+            </DialogTitle>
+            <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                    Are you sure you want to proceed? This action will delete everything related to this user.
+                </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={() => handleConfirm(false)}>Cancel</Button>
+                <Button onClick={() => handleConfirm(true)} autoFocus>Confirm</Button>
+            </DialogActions>
+        </Dialog>
     );
 }
+
+//TODO: add <SubscriberForm/> and <PaymentForm/> options here
 
 export default function UserProfile() {
 
     const [open, setOpen] = React.useState(false);
     const [confirmed, setConfirmed] = React.useState(false);
-    const { closeAccount, updateProfile, fetchProfile, setMode } = React.useContext(AppContext);
+    const { closeAccount, updateProfile, fetchProfile } = React.useContext(AppContext);
     const [errors, setErrors] = React.useState({
         first: '',
         last: '',
         phone: '',
     });
     const [profile, setProfile] = React.useState(null);
+    const navigate = useNavigate();
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -86,7 +88,7 @@ export default function UserProfile() {
         if (confirmed) {
             closeAccount();
             setConfirmed(false);
-            setMode(DELETED_MODE);
+            navigate("/confirmation");
         }
     }, [confirmed]);
 
