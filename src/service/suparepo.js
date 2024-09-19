@@ -137,40 +137,36 @@ export async function selectPlayers({ organizer }) {
     return players;
 }
 
-export async function uploadScoresHistory({ organizer, location, players, history }) {
+export async function uploadScoresHistory({ organizer, history }) {
     const bucketPath = `/${import.meta.env.VITE_ROOT_SCORES_BUCKET}/${organizer}`;
     const targetFile = import.meta.env.VITE_SCORES_HISTORY_FILE;
 
-    if (location && players) {
-        history.push({ now: Date.now(), organizer, location, players });
+    const blob = new Blob([JSON.stringify(history, null, 2)], {
+        type: "application/json",
+    });
 
-        const blob = new Blob([JSON.stringify(history, null, 2)], {
-            type: "application/json",
+    const { data: updateRes, error: updateErr } = await supabase.storage
+        .from(bucketPath)
+        .update(targetFile, blob, {
+            cacheControl: '3600',
+            upsert: true
         });
 
-        const { data: updateRes, error: updateErr } = await supabase.storage
+    if (updateErr && updateErr.message === "Object not found") {
+        const { data: uploadRes, error: uploadErr } = await supabase.storage
             .from(bucketPath)
-            .update(targetFile, blob, {
-                cacheControl: '3600',
-                upsert: true
-            });
-
-        if (updateErr && updateErr.message === "Object not found") {
-            const { data: uploadRes, error: uploadErr } = await supabase.storage
-                .from(bucketPath)
-                .upload(targetFile, blob);
+            .upload(targetFile, blob);
 
 
-            if (uploadErr) {
-                console.log(`upload failure: ${uploadErr.message}`)
-                throw Error(uploadErr);
-            }
-
-            console.log(`upload new file result: ${JSON.stringify(uploadRes)}`)
+        if (uploadErr) {
+            console.log(`upload failure: ${uploadErr.message}`)
+            throw Error(uploadErr);
         }
 
-        console.log(`update existing file result: ${JSON.stringify(updateRes)}`)
+        console.log(`upload new file result: ${JSON.stringify(uploadRes)}`)
     }
+
+    console.log(`update existing file result: ${JSON.stringify(updateRes)}`)
 }
 
 export async function downloadScoresHistory({ organizer }) {

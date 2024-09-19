@@ -9,6 +9,7 @@ import Launcher from './components/tabbed/Launcher';
 import GmapLocation from './components/tabbed/GmapLocation';
 import SubscribeForm from './components/billing/SubscribeForm';
 import GolfGame from './components/tabbed/GolfGame';
+import Placeholder from './components/steps/Placeholder';
 
 export default function App() {
 
@@ -40,11 +41,6 @@ export default function App() {
         {
           path: "/profile",
           element: <UserProfile />,
-        },
-        {
-          path: "/subscribe",
-          element: <SubscribeForm />
-          // <PaymentForm />
         },
         {
           path: "/history",

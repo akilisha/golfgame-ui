@@ -53,10 +53,10 @@ export default function Players() {
       margin: "40px auto"
     }}>
       <TableContainer component={Paper}>
-        <Table sx={{}} aria-label="simple table">
+        <Table aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell align="right" colSpan={2}>Player</TableCell>
+              <TableCell align="left" colSpan={2}>Player</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

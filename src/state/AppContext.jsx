@@ -12,17 +12,17 @@ export const LOCATION_KEY = 'selected-location';
 export const HISTORY_KEY = 'scores-history';
 
 export const scoringTerms = {
-    Stroke: "Any forward club swing that's intended to hit the golf ball",
-    Par: "The number of strokes an expert player is expected to make for a given hole or a group of holes (usually 9 or 18)",
-    Birdie: "One stroke under par on an individual hole",
-    Eagle: "Two strokes under par on an individual hole",
-    ["Albatross / Double Eagle"]: "Three strokes under par on an individual hole",
-    Condor: "Four strokes under par on an individual hole",
-    ["Ace / Hole-in-One"]: "Getting the ball in the hole (cup) in only one stroke",
-    Bogey: "One stroke over par on an individual hole",
-    ["Double Bogey"]: "Two strokes over par on an individual hole",
-    ["Triple Bogey"]: "Three strokes over par on an individual hole",
-    ["Quadruple Bogey"]: "Four strokes over par on an individual hole",
+    Stroke: { color: "red", descr: "Any forward club swing that's intended to hit the golf ball" },
+    Par: { color: "orange", descr: "The number of strokes an expert player is expected to make for a given hole or a group of holes (usually 9 or 18)" },
+    Birdie: { color: "yellow", descr: "One stroke under par on an individual hole" },
+    Eagle: { color: "green", descr: "Two strokes under par on an individual hole" },
+    ["Albatross / Double Eagle"]: { color: "blue", descr: "Three strokes under par on an individual hole" },
+    Condor: { color: "indigo", descr: "Four strokes under par on an individual hole" },
+    ["Ace / Hole-in-One"]: { color: "violet", descr: "Getting the ball in the hole (cup) in only one stroke" },
+    Bogey: { color: "azure", descr: "One stroke over par on an individual hole" },
+    ["Double Bogey"]: { color: "grey", descr: "Two strokes over par on an individual hole" },
+    ["Triple Bogey"]: { color: "peal", descr: "Three strokes over par on an individual hole" },
+    ["Quadruple Bogey"]: { color: "pink", descr: "Four strokes over par on an individual hole" },
 };
 
 const initialState = {
@@ -58,6 +58,27 @@ export function AppProvider({ children }) {
         }))
     }
 
+    useEffect(() => {
+        if (session) {
+            (async function () {
+                const data = await downloadScoresHistory({ organizer: session.user.id });
+                setHistory(formatData(data));
+            })();
+        }
+    }, [session]);
+
+
+    function formatData(json) {
+        if (Array.isArray(json)) {
+            return json.map(({ now: date, location: { name }, players }) => ({
+                date: new Date(date).toLocaleDateString(),
+                location: name,
+                players
+            }));
+        }
+        return [];
+    }
+
     function setMaxHoles(maxHoles) {
         setState(state => ({
             ...state,
@@ -83,7 +104,7 @@ export function AppProvider({ children }) {
     }
 
     function setHistory(history) {
-        if (location) {
+        if (history) {
             sessionStorage.setItem(HISTORY_KEY, JSON.stringify(history))
         }
 
@@ -175,13 +196,22 @@ export function AppProvider({ children }) {
     }
 
     function resetScores() {
-        setState(initialState);
-
-        //if session is available, clear remote database
-        if (session) {
-            const { location, players, history } = state;
-            clearScores({ organizer: session.user.id, location, players, history })
-        }
+        setState((currentState) => {
+            //if session is available, clear remote database
+            if (session) {
+                (async function () {
+                    const data = await downloadScoresHistory({ organizer: session.user.id });
+                    const { location, players, } = currentState;
+                    //push current scores into history
+                    data.push({ now: Date.now(), organizer: session.user.id, location, players });
+                    //supdate history while clearing scores
+                    await clearScores({ organizer: session.user.id, history: data });
+                    // update local history cache
+                    setHistory(formatData(data));
+                })();
+            }
+            return ({ ...currentState, hole: 0, players: [] })
+        });
     }
 
     function playerTally(name) {
@@ -234,8 +264,8 @@ export function AppProvider({ children }) {
 
     return (
         <AppContext.Provider value={{
-            ...state, supabase, session, fetchProfile, updateProfile, closeAccount, fetchPlayers, addPlayer, dropPlayer, updateScores,
-            playerTally, sessionTally, resetScores, setHole, setLocation, setHistory, stripePromise, createPaymentIntent, createSetupIntent,
+            ...state, supabase, session, scoringTerms, fetchProfile, updateProfile, closeAccount, fetchPlayers, addPlayer, dropPlayer, updateScores,
+            playerTally, sessionTally, resetScores, setHole, setMaxHoles, setLocation, setHistory, stripePromise, createPaymentIntent, createSetupIntent,
             downloadScoresHistory, uploadScoresHistory,
         }}>
             {children}
