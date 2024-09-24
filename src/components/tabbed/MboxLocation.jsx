@@ -32,9 +32,9 @@ export default function MboxLocation() {
   function swapIcons({ target: el }) {
     setSelectedLocationIcon(prev => {
       if (prev) {
-        prev.src = "src/assets/location-icon-48.png";
+        prev.src = "/src/assets/location-icon-48.png";
       }
-      el.src = "src/assets/destination-icon-48.png";
+      el.src = "/src/assets/destination-icon-48.png";
       return el;
     });
   }
@@ -83,7 +83,7 @@ export default function MboxLocation() {
 
         const el = document.createElement('img');
         el.className = "marker"
-        el.src = "src/assets/searched-location-48.png";
+        el.src = "/src/assets/searched-location-48.png";
         el.style.width = "35px";
         el.style.height = "35px";
         el.style.backgroundSize = '100%';
@@ -112,7 +112,7 @@ export default function MboxLocation() {
           // create markr element
           const el = document.createElement('img');
           el.className = "marker"
-          el.src = "src/assets/location-icon-48.png";
+          el.src = "/src/assets/location-icon-48.png";
           el.style.width = "35px";
           el.style.height = "35px";
           el.style.backgroundSize = '100%';

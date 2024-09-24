@@ -8,7 +8,6 @@ import {
 
 export const AppContext = createContext(null);
 
-export const LOCATION_KEY = 'selected-location';
 export const HISTORY_KEY = 'scores-history';
 
 export const scoringTerms = {
@@ -29,7 +28,7 @@ const initialState = {
     players: [],
     hole: 0,
     maxHoles: Number(import.meta.env.VITE_MAX_GAME_HOLES || 18),
-    location: JSON.parse(sessionStorage.getItem(LOCATION_KEY)) || null,
+    location: null,
     history: JSON.parse(sessionStorage.getItem(HISTORY_KEY)) || [],
 }
 
@@ -88,18 +87,16 @@ export function AppProvider({ children }) {
 
     function setLocation(location) {
         if (location) {
-            sessionStorage.setItem(LOCATION_KEY, JSON.stringify(location))
-        }
+            setState(state => ({
+                ...state,
+                location
+            }));
 
-        setState(state => ({
-            ...state,
-            location
-        }));
-
-        //if session is available, update remote database
-        if (session && location) {
-            const { name, address, lat, lng } = location;
-            upsertLocation({ name, address, latitude: lat, longitude: lng })
+            //if session is available, update remote database
+            if (session && location) {
+                const { name, address, lat, lng } = location;
+                upsertLocation({ name, address, latitude: lat, longitude: lng })
+            }
         }
     }
 
