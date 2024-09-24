@@ -32,9 +32,9 @@ export default function MboxLocation() {
   function swapIcons({ target: el }) {
     setSelectedLocationIcon(prev => {
       if (prev) {
-        prev.style.backgroundImage = "url('src/assets/location-sign.svg')";
+        prev.src = "src/assets/location-icon-48.png";
       }
-      el.style.backgroundImage = "url('src/assets/rectangular-flag.svg')";
+      el.src = "src/assets/destination-icon-48.png";
       return el;
     });
   }
@@ -81,11 +81,11 @@ export default function MboxLocation() {
         const feature = e.detail?.features[0]
         console.log(feature);
 
-        const el = document.createElement('div');
+        const el = document.createElement('img');
         el.className = "marker"
-        el.style.backgroundImage = "url('src/assets/ticked-circle.svg')";
-        el.style.width = "40px";
-        el.style.height = "40px";
+        el.src = "src/assets/searched-location-48.png";
+        el.style.width = "35px";
+        el.style.height = "35px";
         el.style.backgroundSize = '100%';
 
         const marker = new mapboxgl.Marker(el).setLngLat(feature.geometry.coordinates);
@@ -110,12 +110,11 @@ export default function MboxLocation() {
       if (err == null) {
         for (const item of data.results) {
           // create markr element
-          const el = document.createElement('div');
+          const el = document.createElement('img');
           el.className = "marker"
-          // el.style.backgroundColor = 'red'
-          el.style.backgroundImage = "url('src/assets/location-sign.svg')";
-          el.style.width = "40px";
-          el.style.height = "40px";
+          el.src = "src/assets/location-icon-48.png";
+          el.style.width = "35px";
+          el.style.height = "35px";
           el.style.backgroundSize = '100%';
           el.cursor = 'pointer'
           el.addEventListener('click', function(ev){
