@@ -32,9 +32,9 @@ export default function MboxLocation() {
   function swapIcons({ target: el }) {
     setSelectedLocationIcon(prev => {
       if (prev) {
-        prev.src = 'src/assets/location-icon-48.png';
+        prev.style.backgroundImage = "url('src/assets/location-sign.svg')";
       }
-      el.src = 'src/assets/location-icon-50.png'
+      el.style.backgroundImage = "url('src/assets/rectangular-flag.svg')";
       return el;
     });
   }
@@ -81,9 +81,9 @@ export default function MboxLocation() {
         const feature = e.detail?.features[0]
         console.log(feature);
 
-        const el = document.createElement('img');
+        const el = document.createElement('div');
         el.className = "marker"
-        el.src = 'src/assets/point-down.svg';
+        el.style.backgroundImage = "url('src/assets/ticked-circle.svg')";
         el.style.width = "40px";
         el.style.height = "40px";
         el.style.backgroundSize = '100%';
@@ -92,7 +92,7 @@ export default function MboxLocation() {
         marker.setPopup(
           new mapboxgl.Popup({ offset: 25 }) // add popups
             .setHTML(
-              `<div>${feature.properties.address}</div>`
+              `<div>${feature.properties.full_address}</div>`
             )
         )
 
@@ -110,9 +110,10 @@ export default function MboxLocation() {
       if (err == null) {
         for (const item of data.results) {
           // create markr element
-          const el = document.createElement('img');
+          const el = document.createElement('div');
           el.className = "marker"
-          el.src = 'src/assets/location-icon-48.png';
+          // el.style.backgroundColor = 'red'
+          el.style.backgroundImage = "url('src/assets/location-sign.svg')";
           el.style.width = "40px";
           el.style.height = "40px";
           el.style.backgroundSize = '100%';
