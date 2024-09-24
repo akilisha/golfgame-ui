@@ -6,10 +6,8 @@ import ErrorPage from './components/tabbed/ErrorPage'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import TabbedView from './components/tabbed/TabbedView';
 import Launcher from './components/tabbed/Launcher';
-import GmapLocation from './components/tabbed/GmapLocation';
-import SubscribeForm from './components/billing/SubscribeForm';
 import GolfGame from './components/tabbed/GolfGame';
-import Placeholder from './components/steps/Placeholder';
+import MboxLocation from './components/tabbed/MboxLocation';
 
 export default function App() {
 
@@ -29,8 +27,7 @@ export default function App() {
             },
             {
               path: "/location",
-              element: <GmapLocation />
-              //<HereLocation />
+              element: <MboxLocation />
             },
             {
               path: "/playing",

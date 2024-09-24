@@ -44,8 +44,9 @@ export default function TopMenuBar({ auth, signOut }) {
           color="inherit"
           aria-label="menu"
           sx={{ mr: 2 }}
+          onClick={() => navigate("/")}
         >
-          <MenuIcon onClick={() => navigate("/")} />
+          <MenuIcon />
         </IconButton>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1, cursor: 'pointer' }} onClick={() => navigate("/")}>
           18 Hole Game <GolfCourseIcon sx={{ position: "absolute", top: "20px", ml: 1 }} />
