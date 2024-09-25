@@ -21,7 +21,7 @@ export default function GolfGame() {
 
     const [activeStep, setActiveStep] = React.useState(1);
     const [skipped, setSkipped] = React.useState(new Set());
-    const { location } = React.useContext(AppContext);
+    const { session, location } = React.useContext(AppContext);
 
     const isStepOptional = (step) => {
         return step === 0;
@@ -130,8 +130,8 @@ export default function GolfGame() {
                                     Skip
                                 </Button>
                             )}
-                            {!location && <Alert severity='error'>Select your location first to continue</Alert>}
-                            <Button onClick={handleNext} disabled={!location}>
+                            {(session && !location) && <Alert severity='error'>Select your location first to continue</Alert>}
+                            <Button onClick={handleNext} disabled={session && !location}>
                                 {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
                             </Button>
                         </Box>
