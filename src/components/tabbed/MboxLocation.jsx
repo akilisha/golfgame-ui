@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { AppContext } from '../../state/AppContext';
 import { Typography } from '@mui/material';
-import { Box } from '@mui/material';
+import { Box, Stack } from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
 import mapboxgl from 'mapbox-gl';
 import { MapboxSearchBox } from '@mapbox/search-js-web';
 
@@ -26,7 +27,7 @@ export default function MboxLocation() {
   const mapRef = React.useRef(null);
   const [map, setMap] = React.useState(null);
   const [myLocation, setMyLocation] = React.useState(null);
-  const [_, setSelectedLocationIcon] = React.useState(null);
+  const [, setSelectedLocationIcon] = React.useState(null);
   const { location, setLocation } = React.useContext(AppContext);
 
   function swapIcons({ target: el }) {
@@ -97,6 +98,9 @@ export default function MboxLocation() {
         )
 
         marker.addTo(map);  // Replace this line with code from step 5-2
+        //update my-location
+        const [newLng, newLat] = feature.geometry.coordinates;
+        setMyLocation(l => ({ ...l, lat: newLat, lng: newLng }))
       })
       map.addControl(search);
     }
@@ -117,11 +121,11 @@ export default function MboxLocation() {
           el.style.height = "35px";
           el.style.backgroundSize = '100%';
           el.cursor = 'pointer'
-          el.addEventListener('click', function(ev){
+          el.addEventListener('click', function (ev) {
             const { name, formatted_address, geometry: { location: { lat, lng } } } = item;
             setLocation({ name, address: formatted_address, lat, lng });
             swapIcons(ev);
-        })
+          })
 
           // Add markers for matched locations to the map.
           const marker = new mapboxgl.Marker(el);
@@ -152,6 +156,12 @@ export default function MboxLocation() {
         margin: "10px auto",
         padding: 0
       }}>
+        {!map && (
+          <Stack sx={{ display: 'flex', justifyContent: 'center', color: 'grey.500', alignContent: 'center', pt: 5 }} spacing={2} direction="row">
+            <CircularProgress />
+            <Typography component={"div"} variant='h5'>Loading map...</Typography>
+          </Stack>)
+        }
       </div>
     </Box>
   )
